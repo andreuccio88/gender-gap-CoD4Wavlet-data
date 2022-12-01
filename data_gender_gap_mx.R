@@ -274,6 +274,15 @@ tot <- cbind(usa_F,usa_M)
 
 tot$gender_gap <- tot$mx.tot.by.Caus/tot$mx.tot.by.Caus_F 
 
+
 head(tot)
 tot <- tot[,c(1,2,3,11)]
-tot %>%filter(year==1979) %>% ggplot(aes(Age,log(gender_gap)))+geom_line()+facet_wrap(~Cause_Rev)
+tot %>%filter(year==2000) %>% ggplot(aes(Age,(gender_gap)))+geom_line()+facet_wrap(~Cause_Rev,scales = "free")
+
+summary(tot$gender_gap)
+
+head(tot)
+tot$Cohort <- tot$year-tot$Age
+  
+tot %>%filter(Age==25) %>% ggplot(aes(Cohort,(gender_gap)))+geom_line()+
+  facet_wrap(~Cause_Rev,scales = "free")

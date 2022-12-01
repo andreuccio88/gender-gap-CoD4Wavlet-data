@@ -282,4 +282,4 @@ tot$gender_gap <- tot$dx.tot.by.Caus/tot$dx.tot.by.Caus_F
 
 head(tot)
 tot <- tot[,c(1,2,3,11)]
-tot %>%filter(year==1979) %>% ggplot(aes(Age,log(gender_gap)))+geom_line()+facet_wrap(~Cause_Rev)
+tot %>%filter(year==1990) %>% ggplot(aes(Age,log(gender_gap)))+geom_line()+facet_wrap(~Cause_Rev)
