@@ -10,7 +10,7 @@ library(tidyverse)
 library(reshape)
 library(data.table)
 
-sex=1
+sex=2
 
 usa <- read.csv("USA_d_short_idr.csv",header = T)
 usa_M <- usa %>% filter(sex==sex,cause!=0)
@@ -86,5 +86,86 @@ usa_M=usa_M[,.(dx.tot.by.Caus = sum(dx.tot.by.Caus)), keyby = .(year, Cause_Rev)
 head(usa_M)
 
 save(usa_M,file="dx_usa_M.RData")
-############################################################
 
+########################
+# Exposure
+########################
+
+
+
+rm(list = ls())
+
+
+library(tidyverse)
+library(reshape)
+library(data.table)
+
+sex=2
+usa <- read.csv("USA_e.csv",header = T)
+head(usa)
+
+exp_usa_M <- usa %>% filter(sex==sex)
+exp_usa_M <- exp_usa_M[,-c(1,3,4,5,24,26,28)]
+head(exp_usa_M)
+
+
+exp_usa_M <- melt(exp_usa_M, id.vars =c("year"), measure.vars = c("e0", "e1", "e5", "e10", 
+                                                                  "e15", "e20", "e25", "e30", 
+                                                                  "e35", "e40", "e45", "e50", 
+                                                                  "e55", "e60", "e65", "e70",
+                                                                  "e75", "e80", "e85", "e90",
+                                                                  "e95","e100p"))
+
+
+exp_usa_M$Age <- NA
+exp_usa_M$Age[exp_usa_M$variable=="e0"] <- 0
+exp_usa_M$Age[exp_usa_M$variable=="e1"] <- 1
+exp_usa_M$Age[exp_usa_M$variable=="e5"] <- 5
+exp_usa_M$Age[exp_usa_M$variable=="e10"] <- 10
+exp_usa_M$Age[exp_usa_M$variable=="e15"] <- 15
+exp_usa_M$Age[exp_usa_M$variable=="e20"] <- 20
+exp_usa_M$Age[exp_usa_M$variable=="e25"] <- 25
+exp_usa_M$Age[exp_usa_M$variable=="e30"] <- 30
+exp_usa_M$Age[exp_usa_M$variable=="e35"] <- 35
+exp_usa_M$Age[exp_usa_M$variable=="e40"] <- 40
+exp_usa_M$Age[exp_usa_M$variable=="e45"] <- 45
+exp_usa_M$Age[exp_usa_M$variable=="e50"] <- 50
+exp_usa_M$Age[exp_usa_M$variable=="e55"] <- 55
+exp_usa_M$Age[exp_usa_M$variable=="e60"] <- 60
+exp_usa_M$Age[exp_usa_M$variable=="e65"] <- 65
+exp_usa_M$Age[exp_usa_M$variable=="e70"] <- 70
+exp_usa_M$Age[exp_usa_M$variable=="e75"] <- 75
+exp_usa_M$Age[exp_usa_M$variable=="e80"] <- 80
+exp_usa_M$Age[exp_usa_M$variable=="e85"] <- 85
+exp_usa_M$Age[exp_usa_M$variable=="e90"] <- 90
+exp_usa_M$Age[exp_usa_M$variable=="e95"] <- 95
+exp_usa_M$Age[exp_usa_M$variable=="e100p"] <- 100
+
+
+exp_usa_M <- as.data.table(exp_usa_M)
+
+head(exp_usa_M)
+names(exp_usa_M)[3]<-"exp"
+
+exp_usa_M=exp_usa_M[,.(Exp = sum(exp)), keyby = .(year)]
+exp_usa_M$Sex <- "m"
+head(exp_usa_M)
+save(exp_usa_M,file="Ex_usa_M.RData")
+
+rm(list = ls())
+
+load("dx_usa_M.RData")
+load("Ex_usa_M.RData")
+
+head(exp_usa_M)
+exp_usa_M
+usa_M$Sex <- "m"
+str(usa_M)
+str(exp_usa_M)
+tot_M <- left_join(usa_M,exp_usa_M) 
+
+tot_M <- tot_M[,.(mx = dx.tot.by.Caus/Exp), keyby = .(year,Cause_Rev)]
+str(tot_M)
+tot_M %>% ggplot(aes(year,mx,color=as.factor(Cause_Rev)))+geom_line()
+
+save(tot_M,file="Wavelet_Data_M.RData")
