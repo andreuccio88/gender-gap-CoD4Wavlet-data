@@ -10,13 +10,16 @@ library(tidyverse)
 library(reshape)
 library(data.table)
 
-sex=2
+s=1
 
 usa <- read.csv("USA_d_short_idr.csv",header = T)
-usa_M <- usa %>% filter(sex==sex,cause!=0)
+head(usa)
+tail(usa)
+usa_M <- usa %>% filter(sex==s,cause!=0)
 usa_M <- usa_M[,-c(1,3,4,5,7,26,28,30)]
 
 head(usa_M)
+tail(usa_M)
 
 usa_M <- melt(usa_M, id.vars =c("cause","year"), measure.vars = c("d0", "d1", "d5", "d10", 
                                                                   "d15", "d20", "d25", "d30", 
@@ -100,7 +103,7 @@ library(tidyverse)
 library(reshape)
 library(data.table)
 
-sex=2
+s=1
 usa <- read.csv("USA_e.csv",header = T)
 head(usa)
 

@@ -10,7 +10,7 @@ library(tidyverse)
 library(reshape)
 library(data.table)
 
-sex=2
+s=2
 
 usa <- read.csv("USA_d_short_idr.csv",header = T)
 usa_F <- usa %>% filter(sex==sex,cause!=0)
@@ -100,7 +100,7 @@ library(tidyverse)
 library(reshape)
 library(data.table)
 
-sex=2
+s=2
 usa <- read.csv("USA_e.csv",header = T)
 head(usa)
 
